@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""sprout - a small Lisp that grew out of an empty folder.
+"""spindle - a small Lisp whose evaluator spins instead of recursing.
 
 Dependency-free: a tokenizer, a reader, a tail-call-optimised evaluator,
-macros, closures, and a REPL. Run `python3 sprout.py` for the REPL or
-`python3 sprout.py file.spr` to execute a file.
+macros, closures, and a REPL. Run `python3 spindle.py` for the REPL or
+`python3 spindle.py file.spin` to execute a file.
 """
 
 from __future__ import annotations
@@ -766,7 +766,7 @@ def global_env() -> Env:
     return env
 
 
-# ----------------------------------------------------- standard library, in sprout
+# ---------------------------------------------------- standard library, in spindle
 
 PRELUDE = r"""
 ; The rest of the language, written in itself.
@@ -848,7 +848,7 @@ PRELUDE = r"""
 
 # ------------------------------------------------------------------------ main
 
-BANNER = "sprout - a small Lisp. (exit) or Ctrl-D to leave."
+BANNER = "spindle - a small Lisp. (exit) or Ctrl-D to leave."
 
 
 def run(src: str, env: Env):
@@ -864,7 +864,7 @@ def repl(env: Env) -> int:
     buffer = ""
     while True:
         try:
-            line = input("... " if buffer else "sprout> ")
+            line = input("... " if buffer else "spindle> ")
         except EOFError:
             print()
             return 0
@@ -894,7 +894,7 @@ def repl(env: Env) -> int:
 def main(argv: list[str]) -> int:
     args = argv[1:]
     if args and args[0] in ("-h", "--help"):
-        print(f"usage: {argv[0]} [file.spr ...]   (no arguments starts the REPL)")
+        print(f"usage: {argv[0]} [file.spin ...]   (no arguments starts the REPL)")
         return 0
     env = global_env()
     if not args:

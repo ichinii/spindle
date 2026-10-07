@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Tests for sprout. Run with `python3 test_sprout.py` (or pytest)."""
+"""Tests for spindle. Run with `python3 test_spindle.py` (or pytest)."""
 
 import sys
 
-from sprout import LispError, Symbol, global_env, parse, run, write
+from spindle import LispError, Symbol, global_env, parse, run, write
 
 sys.setrecursionlimit(20000)
 
