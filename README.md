@@ -1,39 +1,44 @@
-# sprout
+# spindle
 
 A small Lisp, written from scratch in one file of dependency-free Python.
 
 It started as an empty directory, so it had to grow its own everything: a
 tokenizer, a reader, an evaluator that does not blow the stack on tail calls,
-closures, macros, and a REPL. The standard library is written in sprout itself.
+closures, macros, and a REPL. The standard library is written in spindle
+itself.
+
+The name is the evaluator: a spindle spins in place, and so does `evaluate` —
+a tail call rebinds its arguments and goes round the loop again instead of
+stacking another frame.
 
 ```
 .
-├── sprout.py        the language (~700 lines, no dependencies)
-├── test_sprout.py   26 tests covering reader, evaluator, builtins, TCO
+├── spindle.py        the language (~920 lines, no dependencies)
+├── test_spindle.py   26 tests covering reader, evaluator, builtins, TCO
 └── examples/
-    ├── fizzbuzz.spr     the obligatory one
-    ├── closures.spr     counters, objects, memoisation
-    ├── sorting.spr      merge sort, and sorting records by a field
-    ├── macros.spr       `while`, `swap!`, and threading macros
-    └── mandelbrot.spr   the set, in ASCII, from recursion and floats
+    ├── fizzbuzz.spin     the obligatory one
+    ├── closures.spin     counters, objects, memoisation
+    ├── sorting.spin      merge sort, and sorting records by a field
+    ├── macros.spin       `while`, `swap!`, and threading macros
+    └── mandelbrot.spin   the set, in ASCII, from recursion and floats
 ```
 
 ## Use it
 
 ```sh
-python3 sprout.py                      # REPL
-python3 sprout.py examples/sorting.spr  # run a file
-python3 test_sprout.py                 # run the tests
+python3 spindle.py                        # REPL
+python3 spindle.py examples/sorting.spin  # run a file
+python3 test_spindle.py                   # run the tests
 ```
 
 ```
-$ python3 sprout.py
-sprout - a small Lisp. (exit) or Ctrl-D to leave.
-sprout> (define (fact n) (if (< n 2) 1 (* n (fact (- n 1)))))
+$ python3 spindle.py
+spindle - a small Lisp. (exit) or Ctrl-D to leave.
+spindle> (define (fact n) (if (< n 2) 1 (* n (fact (- n 1)))))
 fact
-sprout> (fact 30)
+spindle> (fact 30)
 265252859812191058636308480000000
-sprout> (map (lambda (x) (* x x)) (range 1 6))
+spindle> (map (lambda (x) (* x x)) (range 1 6))
 (1 4 9 16 25)
 ```
 
@@ -70,13 +75,13 @@ Integers are Python's, so they never overflow.
 
 **Builtins.** Arithmetic (`+ - * / quotient modulo remainder abs min max sqrt
 expt`), comparison (`= < > <= >= not eq? equal?`), lists (`cons car cdr list
-append length reverse nth range apply map filter fold`), strings
+append length reverse nth list-ref range apply map filter fold`), strings
 (`string-append string-length string-ref substring string=? string<? string>?
 string->number number->string symbol->string string->symbol`), predicates
 (`null? pair? list? number? integer? string? symbol? boolean? procedure? even?
 odd? zero?`), and `display`, `newline`, `print`, `write`, `error`, `assert`.
 
-**Prelude**, written in sprout at the bottom of `sprout.py`: `caar cadr cddr
+**Prelude**, written in spindle at the bottom of `spindle.py`: `caar cadr cddr
 caddr when unless inc! identity 1+ 1- for-each last take drop sum product
 member assoc any? all? sort string-join compose`.
 
@@ -110,10 +115,16 @@ tail position, so a recursive macro like `->` costs nothing at runtime:
 
 Macros are unhygienic — a name introduced by a template can shadow one at the
 call site. That is a real limitation, not a subtlety: `swap!` in
-`examples/macros.spr` breaks if you pass it a variable named `held`.
+`examples/macros.spin` breaks if you pass it a variable named `held`.
 
 ## Deliberately missing
 
 Dotted pairs (lists are Python lists, so `(a . b)` exists only in parameter
 lists), proper rationals, `call/cc`, hygienic macros, a module system, and any
 attempt at speed.
+
+## Hacking on it
+
+`CLAUDE.md` has the shape of the file, the invariants worth knowing before you
+edit (`Symbol` subclasses `str`, `bool` subclasses `int`, and how tail position
+is preserved), and the test conventions.
